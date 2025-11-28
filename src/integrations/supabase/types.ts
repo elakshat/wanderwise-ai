@@ -195,6 +195,50 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_trips: {
+        Row: {
+          created_at: string | null
+          destination_id: string | null
+          id: string
+          is_favorite: boolean | null
+          itinerary_data: Json | null
+          notes: string | null
+          travel_dates: unknown
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          destination_id?: string | null
+          id?: string
+          is_favorite?: boolean | null
+          itinerary_data?: Json | null
+          notes?: string | null
+          travel_dates?: unknown
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          destination_id?: string | null
+          id?: string
+          is_favorite?: boolean | null
+          itinerary_data?: Json | null
+          notes?: string | null
+          travel_dates?: unknown
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_trips_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
