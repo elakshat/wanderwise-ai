@@ -61,6 +61,9 @@ const Navbar = () => {
           <Link to="/hotels" className="text-foreground hover:text-primary transition-colors font-medium">
             Hotels
           </Link>
+          <Link to="/saved-trips" className="text-foreground hover:text-primary transition-colors font-medium">
+            Saved Trips
+          </Link>
         </div>
 
         {/* User Menu */}

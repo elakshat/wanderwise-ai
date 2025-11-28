@@ -160,7 +160,8 @@ export const ChatSidebar = () => {
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-large"
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary to-secondary hover:shadow-glow text-white p-4 rounded-full shadow-large transition-all duration-300 hover:scale-110"
+        title="Open AI Travel Assistant"
       >
         <MessageCircle className="h-6 w-6" />
       </motion.button>
