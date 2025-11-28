@@ -57,6 +57,28 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        ocean: {
+          deep: "hsl(var(--ocean-deep))",
+          DEFAULT: "hsl(var(--ocean-blue))",
+        },
+        coral: {
+          vibrant: "hsl(var(--coral-vibrant))",
+          soft: "hsl(var(--coral-soft))",
+        },
+        cream: {
+          soft: "hsl(var(--cream-soft))",
+          warm: "hsl(var(--cream-warm))",
+        },
+        emerald: {
+          fresh: "hsl(var(--emerald-fresh))",
+          dark: "hsl(var(--emerald-dark))",
+        },
+        gold: {
+          accent: "hsl(var(--gold-accent))",
+        },
+      },
+      fontFamily: {
+        sans: ['Outfit', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
