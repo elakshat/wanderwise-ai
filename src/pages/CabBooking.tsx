@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { ChatSidebar } from "@/components/ChatSidebar";
+import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import { motion } from "framer-motion";
 import { Car, CalendarIcon, MapPin, Users, Clock, IndianRupee } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { searchCities } from "@/data/indianCities";
+import { mockCabs } from "@/data/mockData";
 
 const CabBooking = () => {
   const [pickup, setPickup] = useState("");
@@ -25,42 +26,6 @@ const CabBooking = () => {
   const [passengers, setPassengers] = useState("2");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
-
-  const mockCabs = [
-    {
-      id: 1,
-      type: "Mini",
-      model: "Maruti Swift / Similar",
-      capacity: 4,
-      fare: 12,
-      features: ["AC", "Music System", "Comfortable"],
-      estimatedTime: "10 mins",
-      distance: "15 km",
-      image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d",
-    },
-    {
-      id: 2,
-      type: "Sedan",
-      model: "Honda City / Similar",
-      capacity: 4,
-      fare: 15,
-      features: ["AC", "Music System", "Premium Seats", "Extra Legroom"],
-      estimatedTime: "8 mins",
-      distance: "15 km",
-      image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2",
-    },
-    {
-      id: 3,
-      type: "SUV",
-      model: "Toyota Innova / Similar",
-      capacity: 6,
-      fare: 22,
-      features: ["AC", "Music System", "Spacious", "Luggage Space"],
-      estimatedTime: "12 mins",
-      distance: "15 km",
-      image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b",
-    },
-  ];
 
   const handleSearch = () => {
     if (!pickup || !drop || !pickupDate) {
@@ -318,6 +283,7 @@ const CabBooking = () => {
       </div>
 
       <ChatSidebar />
+      <BackToTop />
     </div>
   );
 };

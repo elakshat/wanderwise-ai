@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { ChatSidebar } from "@/components/ChatSidebar";
+import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, IndianRupee } from "lucide-react";
-import { searchCities } from "@/data/indianCities";
+import { mockHotels } from "@/data/mockData";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -26,42 +27,6 @@ const HotelBooking = () => {
   const [rooms, setRooms] = useState("1");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
-
-  const mockHotels = [
-    {
-      id: 1,
-      name: "Taj Palace Hotel",
-      location: "Mumbai, India",
-      rating: 4.8,
-      reviews: 1250,
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945",
-      price: 12500,
-      amenities: ["Free WiFi", "Pool", "Spa", "Restaurant", "Parking"],
-      description: "Luxury hotel with ocean views",
-    },
-    {
-      id: 2,
-      name: "Oberoi Grand",
-      location: "Kolkata, India",
-      rating: 4.7,
-      reviews: 980,
-      image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb",
-      price: 9800,
-      amenities: ["Free WiFi", "Breakfast", "Gym", "Restaurant"],
-      description: "Heritage property in the heart of the city",
-    },
-    {
-      id: 3,
-      name: "Leela Palace",
-      location: "Bangalore, India",
-      rating: 4.9,
-      reviews: 1450,
-      image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa",
-      price: 15200,
-      amenities: ["Free WiFi", "Pool", "Spa", "Restaurant", "Parking", "Bar"],
-      description: "Premium luxury with world-class amenities",
-    },
-  ];
 
   const handleSearch = () => {
     if (!location || !checkIn || !checkOut) {
@@ -339,6 +304,7 @@ const HotelBooking = () => {
       </div>
 
       <ChatSidebar />
+      <BackToTop />
     </div>
   );
 };
