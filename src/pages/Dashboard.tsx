@@ -1,217 +1,254 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { DestinationCard } from "@/components/DestinationCard";
+import { BackToTop } from "@/components/BackToTop";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, DollarSign, Sparkles } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { Search, MapPin, Plane, Hotel, Car, TrendingUp } from "lucide-react";
+import { popularIndianCities } from "@/data/mockData";
 import heroImage from "@/assets/hero-bg.jpg";
 
 const Dashboard = () => {
   const [destinations, setDestinations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+    checkAuthAndLoadData();
+  }, []);
 
-  useEffect(() => {
-    fetchDestinations();
-  }, [category]);
-
-  const fetchDestinations = async () => {
-    setLoading(true);
-    let query = supabase.from("destinations").select("*").order("rating", { ascending: false }).limit(12);
-
-    if (category !== "all") {
-      query = query.eq("category", category);
+  const checkAuthAndLoadData = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate("/auth");
+      return;
     }
+    loadDestinations();
+  };
 
-    const { data, error } = await query;
+  const loadDestinations = async () => {
+    const { data, error } = await supabase
+      .from("destinations")
+      .select("*")
+      .order("rating", { ascending: false })
+      .limit(12);
 
     if (error) {
-      console.error("Error fetching destinations:", error);
+      console.error("Error loading destinations:", error);
+      toast.error("Failed to load destinations");
     } else {
       setDestinations(data || []);
     }
     setLoading(false);
   };
 
-  const filteredDestinations = destinations.filter(
-    (dest) =>
+  const filteredDestinations = destinations.filter((dest) => {
+    const matchesSearch =
       dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dest.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      dest.country.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      dest.country.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || dest.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
+      <div className="relative h-[500px] overflow-hidden">
+        <img
+          src={heroImage}
+          alt="Travel Hero"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 gradient-overlay" />
-
-        <div className="relative z-10 container mx-auto px-4 text-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
+        
+        <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            className="container mx-auto px-4 text-center"
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-              Discover Your Next
-              <span className="block bg-gradient-to-r from-coral-vibrant to-gold-accent bg-clip-text text-transparent">
-                Adventure
-              </span>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+              Your Journey Starts Here
             </h1>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Let our AI travel assistant create personalized itineraries tailored to your dreams
+            <p className="text-xl md:text-2xl text-white/90 mb-8">
+              Discover India's most beautiful destinations with TravelMate
             </p>
 
+            {/* Quick Action Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <Button
+                size="lg"
+                onClick={() => navigate("/flights")}
+                className="gap-2"
+              >
+                <Plane className="h-5 w-5" />
+                Book Flights
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                onClick={() => navigate("/hotels")}
+                className="gap-2"
+              >
+                <Hotel className="h-5 w-5" />
+                Book Hotels
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => navigate("/cabs")}
+                className="gap-2 bg-white/10 backdrop-blur text-white border-white/20 hover:bg-white/20"
+              >
+                <Car className="h-5 w-5" />
+                Book Cabs
+              </Button>
+            </div>
+
             {/* Search Bar */}
-            <motion.div
-              className="max-w-4xl mx-auto glassmorphism p-4 rounded-2xl shadow-large"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2 relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/60" />
-                  <Input
-                    placeholder="Where do you want to go?"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                  />
+            <Card className="max-w-4xl mx-auto bg-white/95 backdrop-blur shadow-2xl">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1 relative">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search destinations, cities..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 h-12"
+                    />
+                  </div>
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="md:w-48 h-12">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="beach">Beach</SelectItem>
+                      <SelectItem value="mountain">Mountain</SelectItem>
+                      <SelectItem value="heritage">Heritage</SelectItem>
+                      <SelectItem value="adventure">Adventure</SelectItem>
+                      <SelectItem value="cultural">Cultural</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button size="lg" className="gap-2 h-12">
+                    <Search className="h-5 w-5" />
+                    Search
+                  </Button>
                 </div>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="beach">Beach</SelectItem>
-                    <SelectItem value="mountain">Mountain</SelectItem>
-                    <SelectItem value="heritage">Heritage</SelectItem>
-                    <SelectItem value="adventure">Adventure</SelectItem>
-                    <SelectItem value="urban">Urban</SelectItem>
-                    <SelectItem value="nature">Nature</SelectItem>
-                    <SelectItem value="spiritual">Spiritual</SelectItem>
-                    <SelectItem value="romantic">Romantic</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button className="bg-secondary hover:bg-secondary/90 text-white font-semibold">
-                  <Search className="h-5 w-5 mr-2" />
-                  Search
-                </Button>
-              </div>
-            </motion.div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
-      </section>
+      </div>
 
-      {/* Destinations Grid */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Trending Destinations</h2>
-            <p className="text-muted-foreground">Handpicked places loved by travelers</p>
+      {/* Popular Cities Section */}
+      <div className="container mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <TrendingUp className="h-6 w-6 text-primary" />
+            <h2 className="text-3xl font-bold">Popular Destinations in India</h2>
           </div>
-          <Button variant="outline" className="gap-2">
-            <Sparkles className="h-4 w-4" />
-            Get AI Recommendations
-          </Button>
+          <p className="text-muted-foreground text-lg">
+            Explore the most sought-after cities and destinations across India
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
+          {popularIndianCities.map((city, index) => (
+            <motion.div
+              key={city.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <Card className="overflow-hidden hover:shadow-large transition-all duration-300 group cursor-pointer">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={city.image}
+                    alt={city.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-xl font-bold text-white mb-1">{city.name}</h3>
+                    <p className="text-white/80 text-sm">{city.state}</p>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {city.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
+        {/* Trending Destinations */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Trending Destinations</h2>
+              <p className="text-muted-foreground">
+                Handpicked destinations based on ratings and popularity
+              </p>
+            </div>
+            {filteredDestinations.length > 0 && (
+              <Badge variant="secondary" className="text-lg px-4 py-2">
+                {filteredDestinations.length} destinations
+              </Badge>
+            )}
+          </div>
+        </motion.div>
+
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-80 bg-muted animate-pulse rounded-xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-96 bg-muted animate-pulse rounded-xl" />
             ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        ) : filteredDestinations.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredDestinations.map((destination, index) => (
               <DestinationCard key={destination.id} destination={destination} index={index} />
             ))}
           </div>
+        ) : (
+          <Card className="p-12 text-center">
+            <p className="text-xl text-muted-foreground">
+              No destinations found. Try adjusting your search.
+            </p>
+          </Card>
         )}
-      </section>
+      </div>
 
-      {/* Features Section */}
-      <section className="bg-muted py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">AI-Powered Planning</h3>
-              <p className="text-muted-foreground">
-                Get personalized itineraries based on your preferences, budget, and travel style
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Flexible Booking</h3>
-              <p className="text-muted-foreground">
-                Book flights and hotels with flexible dates and cancellation policies
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Best Price Guarantee</h3>
-              <p className="text-muted-foreground">
-                We compare prices across providers to ensure you get the best deal
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Chat Sidebar */}
       <ChatSidebar />
+      <BackToTop />
     </div>
   );
 };

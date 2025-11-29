@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { ChatSidebar } from "@/components/ChatSidebar";
+import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -224,6 +225,7 @@ const SavedTrips = () => {
       </div>
 
       <ChatSidebar />
+      <BackToTop />
     </div>
   );
 };

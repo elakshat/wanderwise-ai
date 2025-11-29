@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { ChatSidebar } from "@/components/ChatSidebar";
+import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plane, CalendarIcon, Users, MapPin, Clock, IndianRupee } from "lucide-react";
-import { searchCities } from "@/data/indianCities";
+import { mockFlights } from "@/data/mockData";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -28,42 +29,6 @@ const FlightBooking = () => {
   const [classType, setClassType] = useState("economy");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
-
-  const mockFlights = [
-    {
-      id: 1,
-      airline: "Air India",
-      flightNumber: "AI202",
-      departure: "09:30 AM",
-      arrival: "11:45 AM",
-      duration: "2h 15m",
-      stops: "Non-stop",
-      price: 4500,
-      class: "Economy",
-    },
-    {
-      id: 2,
-      airline: "IndiGo",
-      flightNumber: "6E456",
-      departure: "02:15 PM",
-      arrival: "04:30 PM",
-      duration: "2h 15m",
-      stops: "Non-stop",
-      price: 3800,
-      class: "Economy",
-    },
-    {
-      id: 3,
-      airline: "Vistara",
-      flightNumber: "UK789",
-      departure: "06:00 PM",
-      arrival: "08:20 PM",
-      duration: "2h 20m",
-      stops: "Non-stop",
-      price: 5200,
-      class: "Economy",
-    },
-  ];
 
   const handleSearch = () => {
     if (!from || !to || !departDate) {
@@ -340,6 +305,7 @@ const FlightBooking = () => {
       </div>
 
       <ChatSidebar />
+      <BackToTop />
     </div>
   );
 };
