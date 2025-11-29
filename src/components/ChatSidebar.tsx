@@ -48,7 +48,7 @@ export const ChatSidebar = () => {
         {
           role: "assistant",
           content:
-            "👋 Hi! I'm TRF-Bot, your personal AI travel assistant. I'm here to help you plan the perfect trip!\n\nTell me about your dream destination, or I can ask you a few questions to create a personalized itinerary. What would you like to explore?",
+            "👋 Hi! I'm TravelMate Assistant, your personal AI travel companion. I'm here to help you plan the perfect trip across India!\n\nI can help you:\n- Find flights, hotels, and cabs\n- Create personalized itineraries\n- Discover amazing destinations\n- Answer travel questions\n\nWhat would you like to explore today?",
         },
       ]);
     };
@@ -160,8 +160,8 @@ export const ChatSidebar = () => {
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary to-secondary hover:shadow-glow text-white p-4 rounded-full shadow-large transition-all duration-300 hover:scale-110"
-        title="Open AI Travel Assistant"
+        className="fixed bottom-6 right-6 z-[100] bg-gradient-to-r from-primary to-secondary hover:shadow-glow text-white p-4 rounded-full shadow-large transition-all duration-300 hover:scale-110"
+        title="Open TravelMate Assistant"
       >
         <MessageCircle className="h-6 w-6" />
       </motion.button>
@@ -173,7 +173,7 @@ export const ChatSidebar = () => {
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
-      className="fixed right-0 top-0 h-screen w-full md:w-[400px] bg-card border-l border-border shadow-large z-40 flex flex-col"
+      className="fixed right-0 top-0 h-screen w-full md:w-[400px] bg-card border-l border-border shadow-large z-[90] flex flex-col"
     >
       {/* Header */}
       <div className="p-4 border-b border-border bg-gradient-to-r from-primary to-secondary">
@@ -181,8 +181,8 @@ export const ChatSidebar = () => {
           <div className="flex items-center gap-3">
             <Bot className="h-6 w-6 text-white" />
             <div>
-              <h3 className="font-semibold text-white">TRF-Bot</h3>
-              <p className="text-xs text-white/80">Your AI Travel Assistant</p>
+              <h3 className="font-semibold text-white">TravelMate Assistant</h3>
+              <p className="text-xs text-white/80">Your AI Travel Companion</p>
             </div>
           </div>
           <Button
@@ -252,7 +252,7 @@ export const ChatSidebar = () => {
                 sendMessage();
               }
             }}
-            placeholder="Ask me about destinations, itineraries..."
+            placeholder="Ask about flights, hotels, destinations..."
             className="resize-none min-h-[60px]"
             disabled={loading}
           />

@@ -99,14 +99,15 @@ const SavedTrips = () => {
       <Navbar />
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold mb-2">Saved Trips</h1>
+          <h1 className="text-4xl font-bold mb-2">My Bookings</h1>
           <p className="text-muted-foreground">
-            Your collection of dream destinations and planned itineraries
+            Your collection of bookings - flights, hotels, and cabs
           </p>
         </motion.div>
 
