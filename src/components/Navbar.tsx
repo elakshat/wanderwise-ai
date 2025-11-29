@@ -11,13 +11,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, LogOut, Settings, Plane } from "lucide-react";
+import { User, LogOut, Settings as SettingsIcon, Plane, Hotel, Car, BookmarkIcon, Moon, Sun } from "lucide-react";
 import { toast } from "sonner";
 import logoImage from "@/assets/logo.png";
+import { useTheme } from "@/contexts/ThemeContext";
+import { NavLink } from "./NavLink";
 
 const Navbar = () => {
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -40,34 +43,48 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border shadow-soft">
+    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border shadow-soft">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <img src={logoImage} alt="LLM-TRF" className="h-10 w-10" />
+          <img src={logoImage} alt="TravelMate" className="h-10 w-10" />
           <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            LLM-TRF
+            TravelMate
           </span>
         </Link>
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-foreground hover:text-primary transition-colors font-medium">
-            Destinations
-          </Link>
-          <Link to="/flights" className="text-foreground hover:text-primary transition-colors font-medium">
+          <NavLink to="/">Dashboard</NavLink>
+          <NavLink to="/flights">
+            <Plane className="h-4 w-4 inline mr-1" />
             Flights
-          </Link>
-          <Link to="/hotels" className="text-foreground hover:text-primary transition-colors font-medium">
+          </NavLink>
+          <NavLink to="/hotels">
+            <Hotel className="h-4 w-4 inline mr-1" />
             Hotels
-          </Link>
-          <Link to="/saved-trips" className="text-foreground hover:text-primary transition-colors font-medium">
-            Saved Trips
-          </Link>
+          </NavLink>
+          <NavLink to="/cabs">
+            <Car className="h-4 w-4 inline mr-1" />
+            Cabs
+          </NavLink>
+          <NavLink to="/saved-trips">
+            <BookmarkIcon className="h-4 w-4 inline mr-1" />
+            My Bookings
+          </NavLink>
         </div>
 
         {/* User Menu */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+          
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -91,12 +108,12 @@ const Navbar = () => {
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/bookings")}>
-                  <Plane className="mr-2 h-4 w-4" />
+                <DropdownMenuItem onClick={() => navigate("/saved-trips")}>
+                  <BookmarkIcon className="mr-2 h-4 w-4" />
                   My Bookings
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
+                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                  <SettingsIcon className="mr-2 h-4 w-4" />
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

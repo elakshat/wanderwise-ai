@@ -13,7 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Plane, CalendarIcon, Users, MapPin, Clock, DollarSign } from "lucide-react";
+import { Plane, CalendarIcon, Users, MapPin, Clock, IndianRupee } from "lucide-react";
+import { searchCities } from "@/data/indianCities";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -67,6 +68,16 @@ const FlightBooking = () => {
   const handleSearch = () => {
     if (!from || !to || !departDate) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (new Date(departDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+      toast.error("Past dates are not allowed");
+      return;
+    }
+
+    if (returnDate && new Date(returnDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+      toast.error("Past dates are not allowed");
       return;
     }
 
@@ -170,7 +181,13 @@ const FlightBooking = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={departDate} onSelect={setDepartDate} initialFocus />
+                      <Calendar 
+                        mode="single" 
+                        selected={departDate} 
+                        onSelect={setDepartDate} 
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        initialFocus 
+                      />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -192,7 +209,13 @@ const FlightBooking = () => {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" selected={returnDate} onSelect={setReturnDate} initialFocus />
+                        <Calendar 
+                          mode="single" 
+                          selected={returnDate} 
+                          onSelect={setReturnDate} 
+                          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                          initialFocus 
+                        />
                       </PopoverContent>
                     </Popover>
                   </div>
@@ -298,7 +321,7 @@ const FlightBooking = () => {
                         <div className="text-right">
                           <p className="text-sm text-muted-foreground">Starting from</p>
                           <p className="text-3xl font-bold text-primary flex items-center">
-                            <DollarSign className="h-6 w-6" />
+                            <IndianRupee className="h-6 w-6" />
                             {flight.price}
                           </p>
                           <p className="text-xs text-muted-foreground">per person</p>

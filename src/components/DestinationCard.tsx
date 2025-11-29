@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, DollarSign } from "lucide-react";
+import { Star, MapPin, IndianRupee } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Destination {
@@ -23,18 +23,18 @@ interface DestinationCardProps {
 }
 
 export const DestinationCard = ({ destination, index }: DestinationCardProps) => {
-  const getPriceLevel = (range: string) => {
+  const getPriceRange = (range: string) => {
     switch (range) {
       case "budget":
-        return "$";
+        return "₹2,000 - ₹5,000";
       case "moderate":
-        return "$$";
+        return "₹5,000 - ₹15,000";
       case "luxury":
-        return "$$$";
+        return "₹15,000 - ₹30,000";
       case "premium":
-        return "$$$$";
+        return "₹30,000+";
       default:
-        return "$$";
+        return "₹5,000 - ₹15,000";
     }
   };
 
@@ -93,8 +93,8 @@ export const DestinationCard = ({ destination, index }: DestinationCardProps) =>
 
               {/* Price */}
               <div className="flex items-center gap-1 text-muted-foreground">
-                <DollarSign className="h-4 w-4" />
-                <span className="font-medium">{getPriceLevel(destination.price_range)}</span>
+                <IndianRupee className="h-4 w-4" />
+                <span className="font-medium text-xs">{getPriceRange(destination.price_range)}</span>
               </div>
             </div>
 

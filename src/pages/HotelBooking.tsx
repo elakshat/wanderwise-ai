@@ -13,7 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, DollarSign } from "lucide-react";
+import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, IndianRupee } from "lucide-react";
+import { searchCities } from "@/data/indianCities";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +66,16 @@ const HotelBooking = () => {
   const handleSearch = () => {
     if (!location || !checkIn || !checkOut) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (new Date(checkIn).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+      toast.error("Past dates are not allowed");
+      return;
+    }
+
+    if (new Date(checkOut).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+      toast.error("Past dates are not allowed");
       return;
     }
 
@@ -156,7 +167,13 @@ const HotelBooking = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={checkIn} onSelect={setCheckIn} initialFocus />
+                      <Calendar 
+                        mode="single" 
+                        selected={checkIn} 
+                        onSelect={setCheckIn} 
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        initialFocus 
+                      />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -177,7 +194,13 @@ const HotelBooking = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={checkOut} onSelect={setCheckOut} initialFocus />
+                      <Calendar 
+                        mode="single" 
+                        selected={checkOut} 
+                        onSelect={setCheckOut} 
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        initialFocus 
+                      />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -296,7 +319,7 @@ const HotelBooking = () => {
                           <div>
                             <p className="text-sm text-muted-foreground">Starting from</p>
                             <p className="text-3xl font-bold text-primary flex items-center">
-                              <DollarSign className="h-6 w-6" />
+                              <IndianRupee className="h-6 w-6" />
                               {hotel.price}
                             </p>
                             <p className="text-xs text-muted-foreground">per night</p>
