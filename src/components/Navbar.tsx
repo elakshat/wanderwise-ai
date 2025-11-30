@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import logoImage from "@/assets/logo.png";
 import { useTheme } from "@/contexts/ThemeContext";
 import { NavLink } from "./NavLink";
+import { CartDrawer } from "./CartDrawer";
 
 const Navbar = () => {
   const [user, setUser] = useState<any>(null);
@@ -84,6 +85,8 @@ const Navbar = () => {
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
+
+          <CartDrawer />
           
           {user ? (
             <DropdownMenu>

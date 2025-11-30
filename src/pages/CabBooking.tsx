@@ -13,12 +13,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Car, CalendarIcon, MapPin, Users, Clock, IndianRupee } from "lucide-react";
+import { Car, CalendarIcon, MapPin, Users, Clock, IndianRupee, ShoppingCart } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { mockCabs } from "@/data/mockData";
+import { useCart } from "@/contexts/CartContext";
 
 const CabBooking = () => {
+  const { addToCart } = useCart();
   const [pickup, setPickup] = useState("");
   const [drop, setDrop] = useState("");
   const [pickupDate, setPickupDate] = useState<Date>();
@@ -270,9 +272,30 @@ const CabBooking = () => {
                           </p>
                           <p className="text-xs text-muted-foreground">per km: ₹{cab.fare}</p>
                         </div>
-                        <Button onClick={() => handleBookCab(cab)} size="lg" className="w-full">
-                          Book Now
-                        </Button>
+                        <div className="flex gap-2 w-full">
+                          <Button onClick={() => handleBookCab(cab)} size="lg" className="flex-1">
+                            Book Now
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              addToCart({
+                                type: "cab",
+                                data: {
+                                  type: cab.type,
+                                  pickup,
+                                  drop,
+                                  date: pickupDate ? format(pickupDate, "PPP") : "",
+                                  time: pickupTime,
+                                },
+                                price: cab.fare * 15,
+                              })
+                            }
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

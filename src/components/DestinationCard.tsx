@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, IndianRupee } from "lucide-react";
+import { Star, MapPin, IndianRupee, Heart } from "lucide-react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Destination {
   id: string;
@@ -23,6 +26,32 @@ interface DestinationCardProps {
 }
 
 export const DestinationCard = ({ destination, index }: DestinationCardProps) => {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveTrip = async () => {
+    setIsSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      toast.error("Please sign in to save trips");
+      setIsSaving(false);
+      return;
+    }
+
+    const { error } = await supabase.from("saved_trips").insert({
+      user_id: user.id,
+      destination_id: destination.id,
+      notes: `Saved ${destination.name}`,
+    });
+
+    if (error) {
+      toast.error("Failed to save trip");
+    } else {
+      toast.success("Trip saved successfully!");
+    }
+    setIsSaving(false);
+  };
+
   const getPriceRange = (range: string) => {
     switch (range) {
       case "budget":
@@ -53,9 +82,22 @@ export const DestinationCard = ({ destination, index }: DestinationCardProps) =>
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <Badge className="absolute top-3 right-3 bg-white/90 text-primary">
-            {destination.category}
-          </Badge>
+          
+          <div className="absolute top-3 left-3">
+            <Badge className="bg-white/90 text-primary backdrop-blur-sm">
+              {destination.category}
+            </Badge>
+          </div>
+          
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm"
+            onClick={handleSaveTrip}
+            disabled={isSaving}
+          >
+            <Heart className="h-5 w-5 text-secondary" />
+          </Button>
         </div>
 
         <CardContent className="p-4">

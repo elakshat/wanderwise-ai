@@ -205,7 +205,12 @@ const SavedTrips = () => {
 
                     {/* Actions */}
                     <div className="flex gap-2">
-                      <Button size="sm" variant="default" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="default" 
+                        className="flex-1"
+                        onClick={() => navigate(`/destination/${trip.destination_id}`)}
+                      >
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </Button>
