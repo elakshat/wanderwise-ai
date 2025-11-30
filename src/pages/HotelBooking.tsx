@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, IndianRupee } from "lucide-react";
@@ -27,6 +29,15 @@ const HotelBooking = () => {
   const [rooms, setRooms] = useState("1");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
+  const [filters, setFilters] = useState({
+    wifi: false,
+    breakfast: false,
+    pool: false,
+    parking: false,
+    ac: false,
+  });
+  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [sortBy, setSortBy] = useState("price");
 
   const handleSearch = () => {
     if (!location || !checkIn || !checkOut) {
@@ -221,12 +232,101 @@ const HotelBooking = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="space-y-4"
+            className="space-y-6"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold">Available Hotels</h2>
               <Badge variant="secondary">{searchResults.length} properties found</Badge>
             </div>
+
+            {/* Filters & Sort */}
+            <Card className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-3">
+                  <Label className="font-semibold">Amenities</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="wifi"
+                        checked={filters.wifi}
+                        onCheckedChange={(checked) => setFilters({ ...filters, wifi: !!checked })}
+                      />
+                      <Label htmlFor="wifi" className="cursor-pointer text-sm">Free WiFi</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="breakfast"
+                        checked={filters.breakfast}
+                        onCheckedChange={(checked) => setFilters({ ...filters, breakfast: !!checked })}
+                      />
+                      <Label htmlFor="breakfast" className="cursor-pointer text-sm">Breakfast</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="pool"
+                        checked={filters.pool}
+                        onCheckedChange={(checked) => setFilters({ ...filters, pool: !!checked })}
+                      />
+                      <Label htmlFor="pool" className="cursor-pointer text-sm">Pool</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="ac"
+                        checked={filters.ac}
+                        onCheckedChange={(checked) => setFilters({ ...filters, ac: !!checked })}
+                      />
+                      <Label htmlFor="ac" className="cursor-pointer text-sm">Air Conditioning</Label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="font-semibold">Price Range (per night)</Label>
+                  <div className="pt-2">
+                    <Slider
+                      value={priceRange}
+                      onValueChange={setPriceRange}
+                      max={50000}
+                      step={1000}
+                      className="mb-2"
+                    />
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>₹{priceRange[0]}</span>
+                      <span>₹{priceRange[1]}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label htmlFor="sortBy" className="font-semibold">Sort By</Label>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger id="sortBy">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="price">Price: Low to High</SelectItem>
+                      <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                      <SelectItem value="rating">Rating</SelectItem>
+                      <SelectItem value="popular">Most Popular</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-end">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setFilters({ wifi: false, breakfast: false, pool: false, parking: false, ac: false });
+                      setPriceRange([0, 50000]);
+                      setSortBy("price");
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              </div>
+            </Card>
 
             {searchResults.map((hotel, index) => (
               <motion.div
@@ -303,6 +403,7 @@ const HotelBooking = () => {
         )}
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>

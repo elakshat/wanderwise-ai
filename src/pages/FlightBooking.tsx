@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Plane, CalendarIcon, Users, MapPin, Clock, IndianRupee } from "lucide-react";
@@ -29,6 +31,12 @@ const FlightBooking = () => {
   const [classType, setClassType] = useState("economy");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
+  const [filters, setFilters] = useState({
+    nonStop: false,
+    refundable: false,
+    wifi: false,
+  });
+  const [sortBy, setSortBy] = useState("price");
 
   const handleSearch = () => {
     if (!from || !to || !departDate) {
@@ -237,7 +245,39 @@ const FlightBooking = () => {
             transition={{ delay: 0.2 }}
             className="space-y-4"
           >
-            <h2 className="text-2xl font-bold mb-4">Available Flights</h2>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+              <h2 className="text-2xl font-bold">Available Flights</h2>
+              
+              {/* Filters */}
+              <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="nonStop"
+                    checked={filters.nonStop}
+                    onCheckedChange={(checked) => setFilters({ ...filters, nonStop: !!checked })}
+                  />
+                  <Label htmlFor="nonStop" className="cursor-pointer">Non-stop only</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="refundable"
+                    checked={filters.refundable}
+                    onCheckedChange={(checked) => setFilters({ ...filters, refundable: !!checked })}
+                  />
+                  <Label htmlFor="refundable" className="cursor-pointer">Refundable</Label>
+                </div>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="price">Price</SelectItem>
+                    <SelectItem value="duration">Duration</SelectItem>
+                    <SelectItem value="departure">Departure</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
             {searchResults.map((flight, index) => (
               <motion.div
@@ -304,6 +344,7 @@ const FlightBooking = () => {
         )}
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>

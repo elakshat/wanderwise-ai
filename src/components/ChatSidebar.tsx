@@ -14,17 +14,36 @@ interface Message {
 }
 
 export const ChatSidebar = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = localStorage.getItem('chatMessages');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(() => {
+    const saved = localStorage.getItem('chatSidebarOpen');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [conversationId, setConversationId] = useState<string | null>(() => {
+    return localStorage.getItem('chatConversationId');
+  });
   const scrollRef = useRef<HTMLDivElement>(null);
   const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
+
+  useEffect(() => {
+    localStorage.setItem('chatSidebarOpen', JSON.stringify(isOpen));
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (conversationId) {
+      localStorage.setItem('chatConversationId', conversationId);
+    }
+  }, [conversationId]);
 
   useEffect(() => {
     // Create a new conversation on mount
