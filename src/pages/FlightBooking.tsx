@@ -16,12 +16,14 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Plane, CalendarIcon, Users, MapPin, Clock, IndianRupee } from "lucide-react";
+import { Plane, CalendarIcon, Users, MapPin, Clock, IndianRupee, ShoppingCart } from "lucide-react";
 import { mockFlights } from "@/data/mockData";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/contexts/CartContext";
 
 const FlightBooking = () => {
+  const { addToCart } = useCart();
   const [tripType, setTripType] = useState("roundtrip");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -331,9 +333,30 @@ const FlightBooking = () => {
                           </p>
                           <p className="text-xs text-muted-foreground">per person</p>
                         </div>
-                        <Button onClick={() => handleBookFlight(flight)} className="w-full">
-                          Select Flight
-                        </Button>
+                        <div className="flex gap-2 w-full">
+                          <Button onClick={() => handleBookFlight(flight)} className="flex-1">
+                            Book Now
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              addToCart({
+                                type: "flight",
+                                data: {
+                                  airline: flight.airline,
+                                  from: from || "Delhi",
+                                  to: to || "Mumbai",
+                                  date: departDate ? format(departDate, "PPP") : "",
+                                  flightNumber: flight.flightNumber,
+                                },
+                                price: flight.price,
+                              })
+                            }
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

@@ -16,12 +16,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, IndianRupee } from "lucide-react";
+import { Hotel, CalendarIcon, Users, MapPin, Star, Wifi, Coffee, Car, Waves, IndianRupee, ShoppingCart } from "lucide-react";
 import { mockHotels } from "@/data/mockData";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/contexts/CartContext";
 
 const HotelBooking = () => {
+  const { addToCart } = useCart();
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState<Date>();
   const [checkOut, setCheckOut] = useState<Date>();
@@ -389,9 +391,30 @@ const HotelBooking = () => {
                             </p>
                             <p className="text-xs text-muted-foreground">per night</p>
                           </div>
-                          <Button onClick={() => handleBookHotel(hotel)} size="lg">
-                            Book Now
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button onClick={() => handleBookHotel(hotel)} size="lg" className="flex-1">
+                              Book Now
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() =>
+                                addToCart({
+                                  type: "hotel",
+                                  data: {
+                                    name: hotel.name,
+                                    location: hotel.location,
+                                    checkIn: checkIn ? format(checkIn, "PPP") : "",
+                                    checkOut: checkOut ? format(checkOut, "PPP") : "",
+                                    rooms,
+                                  },
+                                  price: hotel.price,
+                                })
+                              }
+                            >
+                              <ShoppingCart className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
