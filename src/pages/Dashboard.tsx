@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { DestinationCard } from "@/components/DestinationCard";
 import { BackToTop } from "@/components/BackToTop";
@@ -12,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Search, MapPin, Plane, Hotel, Car, TrendingUp } from "lucide-react";
+import { Search, MapPin, Plane, Hotel, Car, TrendingUp, Clock, Tag } from "lucide-react";
 import { popularIndianCities } from "@/data/mockData";
 import heroImage from "@/assets/hero-bg.jpg";
 
@@ -245,8 +246,62 @@ const Dashboard = () => {
             </p>
           </Card>
         )}
+
+        {/* Offers & Deals */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mt-16"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Special Offers</h2>
+              <p className="text-muted-foreground">Limited time deals you don't want to miss</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { title: "Goa Beach Getaway", discount: "40% OFF", ends: "2 days", price: "₹12,999", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800" },
+              { title: "Kerala Backwaters", discount: "30% OFF", ends: "5 days", price: "₹18,499", image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800" },
+              { title: "Rajasthan Heritage Tour", discount: "25% OFF", ends: "1 week", price: "₹24,999", image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800" },
+            ].map((offer, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+              >
+                <Card className="overflow-hidden hover:shadow-large transition-shadow cursor-pointer">
+                  <div className="relative h-48">
+                    <img src={offer.image} alt={offer.title} className="w-full h-full object-cover" />
+                    <Badge className="absolute top-4 right-4 bg-destructive text-white">
+                      {offer.discount}
+                    </Badge>
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
+                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span>Ends in {offer.ends}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Tag className="h-4 w-4" />
+                        <span className="font-bold text-primary text-base">{offer.price}</span>
+                      </div>
+                    </div>
+                    <Button className="w-full" size="sm">Book Now</Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>

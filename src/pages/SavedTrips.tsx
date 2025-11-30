@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent } from "@/components/ui/card";
@@ -224,6 +225,7 @@ const SavedTrips = () => {
         )}
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>

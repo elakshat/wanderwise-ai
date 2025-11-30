@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -201,6 +202,7 @@ const Settings = () => {
         </motion.div>
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>

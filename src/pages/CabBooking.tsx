@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { BackToTop } from "@/components/BackToTop";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -282,6 +283,7 @@ const CabBooking = () => {
         )}
       </div>
 
+      <Footer />
       <ChatSidebar />
       <BackToTop />
     </div>
