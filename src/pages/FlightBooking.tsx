@@ -113,27 +113,53 @@ const FlightBooking = () => {
                 <div className="space-y-2">
                   <Label htmlFor="from">From</Label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
                     <Input
                       id="from"
-                      placeholder="Delhi (DEL)"
+                      placeholder="Search city..."
                       value={from}
                       onChange={(e) => setFrom(e.target.value)}
                       className="pl-10"
+                      list="fromCities"
                     />
+                    <datalist id="fromCities">
+                      <option value="Delhi (DEL)" />
+                      <option value="Mumbai (BOM)" />
+                      <option value="Bangalore (BLR)" />
+                      <option value="Chennai (MAA)" />
+                      <option value="Kolkata (CCU)" />
+                      <option value="Hyderabad (HYD)" />
+                      <option value="Pune (PNQ)" />
+                      <option value="Ahmedabad (AMD)" />
+                      <option value="Jaipur (JAI)" />
+                      <option value="Goa (GOI)" />
+                    </datalist>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="to">To</Label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
                     <Input
                       id="to"
-                      placeholder="Mumbai (BOM)"
+                      placeholder="Search city..."
                       value={to}
                       onChange={(e) => setTo(e.target.value)}
                       className="pl-10"
+                      list="toCities"
                     />
+                    <datalist id="toCities">
+                      <option value="Mumbai (BOM)" />
+                      <option value="Delhi (DEL)" />
+                      <option value="Bangalore (BLR)" />
+                      <option value="Chennai (MAA)" />
+                      <option value="Kolkata (CCU)" />
+                      <option value="Hyderabad (HYD)" />
+                      <option value="Pune (PNQ)" />
+                      <option value="Ahmedabad (AMD)" />
+                      <option value="Jaipur (JAI)" />
+                      <option value="Goa (GOI)" />
+                    </datalist>
                   </div>
                 </div>
               </div>

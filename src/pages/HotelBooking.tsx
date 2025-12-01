@@ -119,11 +119,24 @@ const HotelBooking = () => {
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="location"
-                    placeholder="City, hotel, or landmark"
+                    placeholder="Search city or hotel..."
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     className="pl-10"
+                    list="hotelCities"
                   />
+                  <datalist id="hotelCities">
+                    <option value="Mumbai" />
+                    <option value="Delhi" />
+                    <option value="Bangalore" />
+                    <option value="Goa" />
+                    <option value="Jaipur" />
+                    <option value="Udaipur" />
+                    <option value="Kerala" />
+                    <option value="Shimla" />
+                    <option value="Manali" />
+                    <option value="Pondicherry" />
+                  </datalist>
                 </div>
               </div>
 
