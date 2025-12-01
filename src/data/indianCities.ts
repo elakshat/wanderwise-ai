@@ -139,9 +139,32 @@ export const getCityOptions = () => {
 };
 
 export const searchCities = (query: string) => {
+  if (!query.trim()) return [];
+  
   const lowercaseQuery = query.toLowerCase();
-  return INDIAN_CITIES.filter(city => 
-    city.name.toLowerCase().includes(lowercaseQuery) || 
-    city.state.toLowerCase().includes(lowercaseQuery)
-  ).slice(0, 10);
+  const normalized = query.replace(/[^a-z]/gi, '').toLowerCase();
+  
+  // Phonetic mapping for common Hindi romanizations
+  const phoneticMap: Record<string, string> = {
+    'delhi': 'dilli',
+    'mumbai': 'bombay',
+    'kolkata': 'calcutta',
+    'chennai': 'madras',
+    'bengaluru': 'bangalore',
+  };
+  
+  const phoneticQuery = phoneticMap[lowercaseQuery] || lowercaseQuery;
+  
+  return INDIAN_CITIES.filter(city => {
+    const cityName = city.name.toLowerCase();
+    const cityNormalized = city.name.replace(/[^a-z]/gi, '').toLowerCase();
+    const stateName = city.state.toLowerCase();
+    
+    return (
+      cityName.includes(lowercaseQuery) || 
+      stateName.includes(lowercaseQuery) ||
+      cityName.includes(phoneticQuery) ||
+      cityNormalized.includes(normalized)
+    );
+  }).slice(0, 10);
 };

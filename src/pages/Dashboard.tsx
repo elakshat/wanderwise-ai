@@ -250,14 +250,18 @@ const Dashboard = () => {
         {/* Offers & Deals */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
           className="mt-16"
         >
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Special Offers</h2>
-              <p className="text-muted-foreground">Limited time deals you don't want to miss</p>
+            <div className="flex items-center gap-3">
+              <Tag className="h-6 w-6 text-secondary" />
+              <div>
+                <h2 className="text-3xl font-bold mb-1">Special Offers</h2>
+                <p className="text-muted-foreground">Limited time deals you don't want to miss</p>
+              </div>
             </div>
           </div>
 

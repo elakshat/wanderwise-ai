@@ -22,7 +22,7 @@ export const ChatSidebar = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(() => {
     const saved = localStorage.getItem('chatSidebarOpen');
-    return saved ? JSON.parse(saved) : false;
+    return saved === 'true';
   });
   const [conversationId, setConversationId] = useState<string | null>(() => {
     return localStorage.getItem('chatConversationId');
@@ -46,8 +46,10 @@ export const ChatSidebar = () => {
   }, [conversationId]);
 
   useEffect(() => {
-    // Create a new conversation on mount
+    // Only create conversation if we don't have one
     const initConversation = async () => {
+      if (conversationId) return;
+      
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -63,17 +65,21 @@ export const ChatSidebar = () => {
       }
 
       setConversationId(data.id);
-      setMessages([
-        {
-          role: "assistant",
-          content:
-            "👋 Hi! I'm TravelMate Assistant, your personal AI travel companion. I'm here to help you plan the perfect trip across India!\n\nI can help you:\n- Find flights, hotels, and cabs\n- Create personalized itineraries\n- Discover amazing destinations\n- Answer travel questions\n\nWhat would you like to explore today?",
-        },
-      ]);
+      
+      // Only set welcome message if no messages exist
+      if (messages.length === 0) {
+        setMessages([
+          {
+            role: "assistant",
+            content:
+              "👋 Hi! I'm TravelMate Assistant, your personal AI travel companion. I'm here to help you plan the perfect trip across India!\n\nI can help you:\n✈️ Find flights, hotels, and cabs\n📝 Create personalized itineraries\n🌍 Discover amazing destinations\n💬 Answer travel questions\n\nWhat would you like to explore today?",
+          },
+        ]);
+      }
     };
 
     initConversation();
-  }, []);
+  }, [conversationId, messages.length]);
 
   const saveMessage = async (role: "user" | "assistant", content: string) => {
     if (!conversationId) return;
@@ -176,10 +182,12 @@ export const ChatSidebar = () => {
   if (!isOpen) {
     return (
       <motion.button
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[100] bg-gradient-to-r from-primary to-secondary hover:shadow-glow text-white p-4 rounded-full shadow-large transition-all duration-300 hover:scale-110"
+        className="fixed bottom-6 right-6 z-[100] bg-gradient-to-r from-primary to-secondary hover:shadow-glow text-white p-4 rounded-full shadow-large transition-all duration-300"
         title="Open TravelMate Assistant"
       >
         <MessageCircle className="h-6 w-6" />
